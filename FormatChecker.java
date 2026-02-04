@@ -17,7 +17,7 @@ public class FormatChecker {
      * 
      * @param args
      */
-    public void main(String[] args) {
+    public static void main(String[] args) {
         // display usage
         if (args.length == 0) {
             System.out.println("Usage: $ java FormatChecker file1 [file2 ... fileN]");
@@ -31,7 +31,7 @@ public class FormatChecker {
         }
     }
 
-    private void checkFileFormat(String fileName) {
+    private static void checkFileFormat(String fileName) {
 
         Scanner fileScan = null;
 
@@ -41,8 +41,7 @@ public class FormatChecker {
             if (!fileScan.hasNextInt()) {
                 fileScan.close();
                 System.out.println("INVALID");
-                throw new InputMismatchException(
-                        "Missing one value of the first integers in " + fileName + " defining rows and colums");
+                throw new InputMismatchException("Missing one value of the first integers in " + fileName + " defining rows and colums");
             }
 
             int rows = fileScan.nextInt();
