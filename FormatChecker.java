@@ -4,17 +4,15 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * A program that checks the format of input files against given criteria
+ * A program that checks the format of input files against given criteria.
  * The program validates that the file contains the correct number of rows and
- * columns specified
- * in the first line of the file.
+ * columns specified in the first line of the file.
  * 
  * @author kellancarrillo5
  */
 public class FormatChecker {
     /**
-     * Main method that processes command-line arguements and validates each file
-     * 
+     * Main method that processes command-line arguements 
      * @param args
      */
     public static void main(String[] args) {
@@ -24,87 +22,96 @@ public class FormatChecker {
             return;
         }
         // Test each given file name individually
-        for (String fileName : args) {
+        for (int i = 0; i < args.length; i++) {
+            String fileName = args[i];
+            System.out.println();
             System.out.println(fileName);
             checkFileFormat(fileName);
-            System.out.println();
         }
     }
 
+    /**
+     * Checks the file format and throws an expection when an error is caught.
+     * @param fileName fileName is given from user input in the command line
+     */
     private static void checkFileFormat(String fileName) {
-
-        Scanner fileScan = null;
+        Scanner fileScanner = null;
 
         try {
-            fileScan = new Scanner(new File(fileName));
+            fileScanner = new Scanner(new File(fileName));
 
-            if (!fileScan.hasNextInt()) {
-                fileScan.close();
+            // First line: rows and columns
+            int rows = fileScanner.nextInt();
+            int cols = fileScanner.nextInt();
+
+            // Check that the rows and columns are positive
+            if (rows <= 0 || cols <= 0) { 
+                fileScanner.close();
+                System.out.println("Assigned rows and columns must be positive");
                 System.out.println("INVALID");
-                throw new InputMismatchException("Missing one value of the first integers in " + fileName + " defining rows and colums");
+                fileScanner.close();
+                return;
             }
-
-            int rows = fileScan.nextInt();
-            int cols = fileScan.nextInt();
-
-            if (rows < 0 || cols < 0) {
-                fileScan.close();
+            //Check that the first line has only two values
+            if (!fileScanner.nextLine().trim().equals("")) {
+                System.out.println("The first line has to many values.");
                 System.out.println("INVALID");
-                throw new InputMismatchException("The first two values in the file " + fileName + " must be positive");
+                fileScanner.close();
+                return;
             }
-
-            int rowsCount = 0;
-            fileScan.nextLine();
-
-            while (fileScan.hasNextLine()) {
-                String line = fileScan.nextLine().trim();
-
-                // Empty line is invalid
-                if (line.isEmpty()) {
+            // Read EXACTLY the expected number of rows
+            for (int i = 0; i < rows; i++) {
+                if (!fileScanner.hasNextLine()) {
+                    System.out.println("There aren't enough rows!");
                     System.out.println("INVALID");
+                    fileScanner.close();
                     return;
                 }
-                rowsCount++;
 
-                Scanner lineScanner = new Scanner(line);
+                String line = fileScanner.nextLine(); // move to the next line
+                Scanner lineScanner = new Scanner(line); // scan the line
+
                 int colCount = 0;
-
-                // Parse values in the row
                 while (lineScanner.hasNext()) {
-                    if (!lineScanner.hasNextDouble()) {
-                        System.out.println("INVALID");
-                        lineScanner.close();
-                        return;
-                    }
-                    lineScanner.nextDouble();
+                    String check = lineScanner.next();
+                    Double.parseDouble(check);
                     colCount++;
                 }
 
-                lineScanner.close();
-
-                // Check if colCount is the same as given number
                 if (colCount != cols) {
+                    System.out.println("There aren't enough columns!");
                     System.out.println("INVALID");
+                    fileScanner.close();
+                    lineScanner.close();
                     return;
                 }
-
-                // Check if rowCountt is the same as given number
-                if (rowsCount != rows) {
-                    System.out.println("INVALID");
-                    return;
-                }
-
-                // If everything checks out
-                System.out.println("VALID");
+                lineScanner.close();
             }
 
+            if (fileScanner.hasNext()) {
+                System.out.println("There are to many rows!");
+                System.out.println("INVALID");
+                fileScanner.close();
+                return;
+            }
+            System.out.println("VALID");
+
+
         } catch (FileNotFoundException e) {
-            System.out.println("Could not open or read " + fileName);
-        //} catch (InputMistmatchException e) {
-            //System.out.println(fileScan.next() + " isn't an int in " + fileName);
+            System.out.println(e.toString());
+            System.out.println("INVALID");
+            System.out.println();
+        } catch (InputMismatchException e) {
+            System.out.println(e.toString());
+            System.out.println("INVALID");
+            System.out.println();
+        } catch (NumberFormatException e) {
+            System.out.println(e.toString());
+            System.out.println("INVALID");
+            System.out.println();
         } finally {
-            if (fileScan != null) {
-                fileScan.close();
+            if (fileScanner != null) {
+                fileScanner.close();
             }
         }
     }
