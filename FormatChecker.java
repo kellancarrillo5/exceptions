@@ -98,15 +98,12 @@ public class FormatChecker {
         } catch (FileNotFoundException e) {
             System.out.println(e.toString());
             System.out.println("INVALID");
-            //System.out.println();
         } catch (InputMismatchException e) {
             System.out.println(e.toString());
             System.out.println("INVALID");
-            //System.out.println();
         } catch (NumberFormatException e) {
             System.out.println(e.toString());
             System.out.println("INVALID");
-            //System.out.println();
         } finally {
             if (fileScanner != null) {
                 fileScanner.close();
