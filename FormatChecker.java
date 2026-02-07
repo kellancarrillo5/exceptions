@@ -12,7 +12,7 @@ import java.util.Scanner;
  */
 public class FormatChecker {
     /**
-     * Main method that processes command-line arguements 
+     * Main method that processes command-line arguements
      * @param args
      */
     public static void main(String[] args) {
@@ -45,14 +45,13 @@ public class FormatChecker {
             int cols = fileScanner.nextInt();
 
             // Check that the rows and columns are positive
-            if (rows <= 0 || cols <= 0) { 
+            if (rows <= 0 || cols <= 0) {
                 fileScanner.close();
                 System.out.println("Assigned rows and columns must be positive");
                 System.out.println("INVALID");
-                fileScanner.close();
                 return;
             }
-            //Check that the first line has only two values
+            // Check that the first line has only two values
             if (!fileScanner.nextLine().trim().equals("")) {
                 System.out.println("The first line has to many values.");
                 System.out.println("INVALID");
@@ -79,23 +78,22 @@ public class FormatChecker {
                 }
 
                 if (colCount != cols) {
-                    System.out.println("There aren't enough columns!");
-                    System.out.println("INVALID");
                     fileScanner.close();
                     lineScanner.close();
+                    System.out.println("There aren't enough columns!");
+                    System.out.println("INVALID");
                     return;
                 }
                 lineScanner.close();
             }
 
             if (fileScanner.hasNext()) {
+                fileScanner.close();
                 System.out.println("There are to many rows!");
                 System.out.println("INVALID");
-                fileScanner.close();
                 return;
             }
             System.out.println("VALID");
-
 
         } catch (FileNotFoundException e) {
             System.out.println(e.toString());
